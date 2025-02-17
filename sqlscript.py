@@ -1,7 +1,6 @@
 import random
 import datetime
 
-# Configuration
 total_sales_target = 500000
 weeks = 26
 items = [
@@ -35,13 +34,9 @@ while total_sales < total_sales_target:
     sale_time = datetime.time(random.randint(8, 22), random.randint(0, 59), random.randint(0, 59))
     customer_id = random.randint(9000, 9999)
 
-    #if total_sales + sale_price > total_sales_target:
-    #    break  # Stop if next sale exceeds target
-
     sales.append((item[0], item[1], item[2], round(sale_price, 4), sale_date, sale_time, customer_id))
     total_sales += sale_price
 
-# Write to SQL file
 with open(output_file, "w") as f:
     f.write("INSERT INTO Sales (ItemID, ItemName, Category, SalePrice, SaleDate, SaleTime, CustomerID) VALUES\n")
     values = [
