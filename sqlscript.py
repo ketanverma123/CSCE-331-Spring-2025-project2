@@ -46,3 +46,4 @@ with open(output_file, "w") as f:
     f.write(",\n".join(values) + ";\n")
 
 print(f"Generated {len(sales)} sales records totaling ${total_sales:.2f} in {output_file}.")
+print(f"Above are the generated sales for bought items")
