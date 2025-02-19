@@ -1,6 +1,6 @@
 import random
 import datetime
-
+import numpy
 total_sales_target = 500000
 weeks = 26
 items = [
@@ -19,7 +19,7 @@ items = [
     (4, "Oreo Ice Blended with Pearl", "Ice Blended", 6.35)
 ]
 
-start_date = datetime.date.today() - datetime.timedelta(days=7 * weeks)
+start_date = datetime.date.today() - datetime.timedelta(days = 7 * weeks)
 end_date = datetime.date.today()
 
 output_file = "insert_sales.sql"
@@ -30,7 +30,7 @@ total_sales = 0
 while total_sales < total_sales_target:
     item = random.choice(items)
     sale_price = item[3]
-    sale_date=start_date + datetime.timedelta(days=random.randint(0, (end_date - start_date).days))
+    sale_date = start_date + datetime.timedelta(days=random.randint(0, (end_date - start_date).days))
     sale_time = datetime.time(random.randint(8, 22), random.randint(0, 59), random.randint(0, 59))
     customer_id = random.randint(9000, 9999)
 
