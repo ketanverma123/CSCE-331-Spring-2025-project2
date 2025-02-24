@@ -51,16 +51,16 @@ public class GUI extends JFrame {
     JPanel panel = new JPanel(new BorderLayout());
 
     setTitle("Sharetea Inventory");
-    setSize(800, 600);
+    setSize(1200, 750);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
 
     JPanel topBar = new JPanel(new BorderLayout());
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    JButton menuButton = new JButton("Main Menu");
-    JButton inventoryButton = new JButton("Inventory");
-    JButton analyticsButton = new JButton("Analytics");
+    JButton menuButton = createButton("./images/home.png", "Main Menu");
+    JButton inventoryButton = createButton("./images/inventory.png", "Inventory");
+    JButton analyticsButton = createButton("./images/analytics.png", "Analytics");
 
     menuButton.addActionListener(e->cardLayout.show(cardPanel,"Menu"));
     inventoryButton.addActionListener(e -> cardLayout.show(cardPanel, "Inventory"));
@@ -71,7 +71,8 @@ public class GUI extends JFrame {
     buttonPanel.add(analyticsButton);
 
     timeLabel = new JLabel();
-    timeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+    timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    timeLabel.setForeground(Color.WHITE);
     Timer timer = new Timer(1000, e -> updateTime());
     timer.start();
     startClock();
@@ -122,7 +123,7 @@ public class GUI extends JFrame {
                 "        category,\n" +
                 "        itemname\n" +
                 "    FROM Inventory\n" +
-                "    WHERE stock < 10  -- Threshold for low stock\n" +
+                "    WHERE stock < 10\n" +
                 ")\n" +
                 "SELECT \n" +
                 "    i.category AS \"Category\",\n" +
@@ -169,6 +170,29 @@ public class GUI extends JFrame {
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
     String currentTime = sdf.format(new Date());
     timeLabel.setText(currentTime);
+  }
+
+  private JButton createButton(String imgPath, String label){
+    ImageIcon analyticsIcon = new ImageIcon(imgPath);
+    Image img = analyticsIcon.getImage().getScaledInstance(60,60,1);
+    ImageIcon scaledIcon = new ImageIcon(img);
+
+    JButton button = new JButton(label,scaledIcon);
+
+    button.setHorizontalTextPosition(SwingConstants.CENTER);
+    button.setVerticalTextPosition(SwingConstants.BOTTOM);
+    button.setFont(new Font("Arial", Font.BOLD, 10));
+    button.setForeground(Color.WHITE);
+    
+    Dimension buttonSize = new Dimension(90,100);
+    button.setPreferredSize(buttonSize);
+    button.setMinimumSize(buttonSize);
+    button.setMaximumSize(buttonSize);
+    button.setBorderPainted(false);
+    button.setFocusPainted(false);
+    button.setContentAreaFilled(false);
+
+    return button;
   }
 
   public static void setGlobalFont(Font font) {
