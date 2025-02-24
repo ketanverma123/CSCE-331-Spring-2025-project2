@@ -1,69 +1,40 @@
 import java.sql.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class GUI extends JFrame {
   private CardLayout cardLayout;
   private JPanel cardPanel;
 
+  private JTable inventoryTable;
+  private DefaultTableModel inventoryTableModel;
+  
+  private JLabel timeLabel;
+
+  // Main handler to switch between panels
   public GUI()
   {
-    //Building the connection
-    Connection conn = null;
-
-    String database_name = "team_74_db";
-    String database_user = "team_74";
-    String database_password = "alka";
-    String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
-    try {
-      conn = DriverManager.getConnection(database_url, database_user, database_password);
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.err.println(e.getClass().getName()+": "+e.getMessage());
-      System.exit(0);
-    }
-    JOptionPane.showMessageDialog(null,"Opened database successfully");
-
-    // TODO: Fill with panel swapping logic
-
-    setTitle("ShareTea");
-    setSize(600, 400);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLocationRelativeTo(null);
-
-    // Initialize CardLayout
     cardLayout = new CardLayout();
     cardPanel = new JPanel(cardLayout);
 
-    // Create different panels (frames)
     JPanel mainMenuPanel = createMenu();
-    JPanel analyticsPanel = createInventory();
-    JPanel inventoryPanel = createAnalytics();
+    JPanel analyticsPanel = createAnalytics();
+    JPanel inventoryPanel = createInventory();
 
-    // Add panels to card layout
-    cardPanel.add(mainMenuPanel, "Menu");
-    cardPanel.add(analyticsPanel, "Analytics");
     cardPanel.add(inventoryPanel, "Inventory");
+    cardPanel.add(analyticsPanel, "Analytics");
+    cardPanel.add(mainMenuPanel, "Menu");
 
     add(cardPanel);
     setVisible(true);
-
-    //closing the connection
-    try {
-      conn.close();
-      JOptionPane.showMessageDialog(null,"Connection Closed.");
-    } catch(Exception e) {
-      JOptionPane.showMessageDialog(null,"Connection NOT Closed.");
-    }
   }
 
   private JPanel createMenu(){
-    JPanel panel = new JPanel(new BorderLayout());
-    
-    return panel;
-  }
-
-  private JPanel createInventory(){
     JPanel panel = new JPanel(new BorderLayout());
 
     return panel;
@@ -75,7 +46,141 @@ public class GUI extends JFrame {
     return panel;
   }
 
+  // Creates Inventory Panel
+  private JPanel createInventory(){
+    JPanel panel = new JPanel(new BorderLayout());
+
+    setTitle("Sharetea Inventory");
+    setSize(800, 600);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new BorderLayout());
+
+    JPanel topBar = new JPanel(new BorderLayout());
+
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JButton menuButton = new JButton("Main Menu");
+    JButton inventoryButton = new JButton("Inventory");
+    JButton analyticsButton = new JButton("Analytics");
+
+    menuButton.addActionListener(e->cardLayout.show(cardPanel,"Menu"));
+    inventoryButton.addActionListener(e -> cardLayout.show(cardPanel, "Inventory"));
+    analyticsButton.addActionListener(e -> cardLayout.show(cardPanel, "Analytics"));
+
+    buttonPanel.add(menuButton);
+    buttonPanel.add(inventoryButton);
+    buttonPanel.add(analyticsButton);
+
+    timeLabel = new JLabel();
+    timeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+    Timer timer = new Timer(1000, e -> updateTime());
+    timer.start();
+    startClock();
+
+    topBar.add(buttonPanel, BorderLayout.WEST);
+    topBar.add(timeLabel, BorderLayout.EAST);
+
+    JLabel inventoryTitle = new JLabel("Inventory", SwingConstants.CENTER);
+    inventoryTitle.setFont(new Font("Arial", Font.BOLD, 24));
+
+    inventoryTableModel = new DefaultTableModel();
+    inventoryTable = new JTable(inventoryTableModel);
+    JScrollPane scrollPane = new JScrollPane(inventoryTable);
+
+    loadInventoryDataFromDatabase();
+
+    panel.add(topBar, BorderLayout.NORTH);
+    panel.add(inventoryTitle, BorderLayout.CENTER);
+    panel.add(scrollPane, BorderLayout.SOUTH);
+
+    return panel;
+  }
+
+  // Used in createInventory to fill table with database values
+  private void loadInventoryDataFromDatabase() {
+    Connection conn = null;
+
+    String database_name = "team_74_db";
+    String database_user = "team_74";
+    String database_password = "alka";
+    String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
+    try {
+      conn = DriverManager.getConnection(database_url, database_user, database_password);
+  
+      Statement stmt = conn.createStatement();
+
+      String query = "WITH WeeklyUsage AS (\n" +
+                "    SELECT \n" +
+                "        i.category,\n" +
+                "        COUNT(s.itemid) AS weekly_usage\n" +
+                "    FROM Sales s\n" +
+                "    JOIN Inventory i ON s.itemid = i.itemid\n" +
+                "    WHERE s.saledate >= CURRENT_DATE - INTERVAL '7 days'\n" +
+                "    GROUP BY i.category\n" +
+                "),\n" +
+                "LowStockItems AS (\n" +
+                "    SELECT \n" +
+                "        category,\n" +
+                "        itemname\n" +
+                "    FROM Inventory\n" +
+                "    WHERE stock < 10  -- Threshold for low stock\n" +
+                ")\n" +
+                "SELECT \n" +
+                "    i.category AS \"Category\",\n" +
+                "    SUM(i.stock) AS \"Stock\",\n" +
+                "    wu.weekly_usage AS \"Previous Week Usage\",\n" +
+                "    COALESCE(STRING_AGG(DISTINCT ls.itemname, ', '), 'None') AS \"Low Stock Items\"\n" +
+                "FROM Inventory i\n" +
+                "LEFT JOIN WeeklyUsage wu ON i.category = wu.category\n" +
+                "LEFT JOIN LowStockItems ls ON i.category = ls.category\n" +
+                "GROUP BY i.category, wu.weekly_usage\n" +
+                "ORDER BY i.category;";
+
+      ResultSet result = stmt.executeQuery(query);
+      
+      ResultSetMetaData metaData = result.getMetaData();
+      int colCount = metaData.getColumnCount();
+
+      String[] colNames = new String[colCount];
+      for(int i = 1; i <= colCount; ++i){
+        colNames[i-1] = metaData.getColumnName(i);
+      }
+      inventoryTableModel.setColumnIdentifiers(colNames);
+
+      while(result.next()){
+        Object[] rowData = new Object[colCount];
+        for(int i = 1; i <= colCount; ++i){
+          rowData[i-1] = result.getObject(i);
+        }
+        inventoryTableModel.addRow(rowData);
+      }
+      
+      conn.close();
+    } catch (Exception e){
+      JOptionPane.showMessageDialog(null, "Error accessing Database: " + e);
+    }
+  }
+
+  private void startClock() {
+    Timer timer = new Timer(1000, e -> updateTime());
+    timer.start();
+  }
+
+  private void updateTime() {
+    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+    String currentTime = sdf.format(new Date());
+    timeLabel.setText(currentTime);
+  }
+
+  public static void setGlobalFont(Font font) {
+    UIManager.getDefaults().keySet().forEach(key -> {
+      if (key.toString().toLowerCase().contains("font")) {
+        UIManager.put(key, font);
+      }
+    });
+  }
+
   public static void main(String[] args) {
+    setGlobalFont(new Font("Arial", Font.BOLD, 12));
     SwingUtilities.invokeLater(() -> new GUI());
   }
 
