@@ -351,6 +351,10 @@ public class GUI extends JFrame {
     return panel;
   }
 
+  private void loadAnalyticsFromDatabase(){
+    
+  }
+
   // Used in createInventory to fill table with database values
   private void loadInventoryDataFromDatabase() {
     inventoryTableModel.setRowCount(0);
