@@ -21,6 +21,9 @@ public class GUI extends JFrame {
   private CardLayout cardLayout;
   private JPanel cardPanel;
 
+  private JTable analyticsTable;
+  private DefaultTableModel analyticsTableModel;
+
   private JTable inventoryTable;
   private DefaultTableModel inventoryTableModel;
   
@@ -227,10 +230,10 @@ public class GUI extends JFrame {
     JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     navPanel.setOpaque(false);
 
-    JButton menuButton = createNavButton("./images/home.png", "Main Menu");
+    JButton menuButton = createButton("./images/home.png", "Main Menu");
     menuButton.addActionListener(e -> cardLayout.show(cardPanel, "Menu"));
 
-    JButton inventoryButton = createNavButton("./images/inventory.png", "Inventory");
+    JButton inventoryButton = createButton("./images/inventory.png", "Inventory");
     inventoryButton.addActionListener(e -> {
       if (currUser.isManager) {
         cardLayout.show(cardPanel, "Inventory");
@@ -239,7 +242,7 @@ public class GUI extends JFrame {
       }
     });
 
-    JButton analyticsButton = createNavButton("./images/analytics.png", "Analytics");
+    JButton analyticsButton = createButton("./images/analytics.png", "Analytics");
     analyticsButton.addActionListener(e -> cardLayout.show(cardPanel, "Analytics"));
 
     //adding buttons
@@ -512,10 +515,6 @@ public class GUI extends JFrame {
       e.printStackTrace();
       JOptionPane.showMessageDialog(this, "Error retrieving analytics data.");
     }
-  }
-
-  private void loadAnalyticsFromDatabase(){
-    
   }
 
   // Used in createInventory to fill table with database values
