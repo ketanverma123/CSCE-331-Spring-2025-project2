@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GUI extends JFrame {
   private CardLayout cardLayout;
@@ -15,6 +17,32 @@ public class GUI extends JFrame {
   private DefaultTableModel inventoryTableModel;
   
   private JLabel timeLabel;
+
+  private Vector<Item> order = new Vector<>();
+
+  public static class Item {
+    int id;
+    String name;
+    String category;
+    double price;
+
+    public Item(int id, String name, String category, double price) {
+      this.id = id;
+      this.name = name;
+      this.category = category;
+      this.price = price;
+    }
+
+    @Override
+    public String toString() {
+      return "Item{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              ", category='" + category + '\'' +
+              ", price=" + price +
+              '}';
+    }
+  }
 
   // Main handler to switch between panels
   public GUI()
@@ -92,6 +120,9 @@ public class GUI extends JFrame {
     panel.add(topBar, BorderLayout.NORTH);
     panel.add(inventoryTitle, BorderLayout.CENTER);
     panel.add(scrollPane, BorderLayout.SOUTH);
+
+    addItemToOrder(536);
+    checkout();
 
     return panel;
   }
@@ -194,6 +225,105 @@ public class GUI extends JFrame {
 
     return button;
   }
+
+  // Puts menu item into order vector given an id
+  private void addItemToOrder(Integer id){
+    
+    // Set up connection parameters
+    Connection conn = null;
+    String database_name = "team_74_db";
+    String database_user = "team_74";
+    String database_password = "alka";
+    String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
+
+    try {
+      conn = DriverManager.getConnection(database_url, database_user, database_password);
+      
+      // Set up and execute query
+      String query = "SELECT name, category, price FROM Menu WHERE id = ?";
+      PreparedStatement pstmt = conn.prepareStatement(query);
+      pstmt.setInt(1, id);
+      ResultSet result = pstmt.executeQuery();
+      
+      // Get item data from query
+      if (result.next()) {
+        String name = result.getString("name");
+        String category = result.getString("category");
+        double price = result.getDouble("price");
+
+        Item item = new Item(id, name, category, price);
+
+        // Add item to order
+        order.add(item);
+        
+        // For debugging
+        System.out.println("Item added to order: " + item);
+      } else {
+        // For debugging
+        System.out.println("Item with ID " + id + " not found in Menu.");
+
+        JOptionPane.showMessageDialog(null, "Item with ID " + id + " not found in Menu.");
+      }
+      
+      conn.close();
+    } catch (Exception e){
+      JOptionPane.showMessageDialog(null, "Error accessing Database: " + e);
+    }
+  }
+
+  // Empties order vector and updates inventory and sales tables in database
+  private void checkout(){
+    // Dont proceed with logic if empty order
+    if(order.isEmpty()){
+      JOptionPane.showMessageDialog(null, "Order Empty");
+      return;
+    }
+
+    // Set up connection parameters
+    Connection conn = null;
+    String database_name = "team_74_db";
+    String database_user = "team_74";
+    String database_password = "alka";
+    String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
+
+    try {
+      conn = DriverManager.getConnection(database_url, database_user, database_password);
+      conn.setAutoCommit(false);
+      
+      // Set up query to be filled in
+      String insertSaleQuery = "INSERT INTO Sales (itemid, itemname, category, saleprice, saledate, saletime, customerid) " +
+                                "VALUES (?, ?, ?, ?, CURRENT_DATE, CURRENT_TIME, ?)";
+      String updateInventoryQuery = "UPDATE Inventory SET stock = stock - 1 WHERE itemid = ?";
+      PreparedStatement insertSaleStmt = conn.prepareStatement(insertSaleQuery);
+      PreparedStatement updateInventoryStmt = conn.prepareStatement(updateInventoryQuery);
+
+      // Create queries
+      while (!order.isEmpty()) {
+        Item item = order.remove(0);
+
+        insertSaleStmt.setInt(1, item.id);
+        insertSaleStmt.setString(2, item.name);
+        insertSaleStmt.setString(3, item.category);
+        insertSaleStmt.setDouble(4, item.price);
+        insertSaleStmt.setInt(5, ThreadLocalRandom.current().nextInt(9000, 10000));
+        insertSaleStmt.executeUpdate();
+
+        updateInventoryStmt.setInt(1, item.id);
+        updateInventoryStmt.executeUpdate();
+
+        System.out.println("Item checked out: " + item);
+      }
+
+      // Execute Queries
+      conn.commit();
+      System.out.println("Checkout complete!");
+      
+      conn.close();
+    } catch (Exception e){
+      JOptionPane.showMessageDialog(null, "Error accessing Database: " + e);
+    }
+  }
+
 
   public static void setGlobalFont(Font font) {
     UIManager.getDefaults().keySet().forEach(key -> {
