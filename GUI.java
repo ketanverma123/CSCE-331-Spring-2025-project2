@@ -23,6 +23,11 @@ public class GUI extends JFrame {
 
   private Vector<Item> order = new Vector<>();
 
+  private DefaultListModel<String> orderListModel = new DefaultListModel<>();
+  private JPanel orderPanel;
+  private JLabel totalPriceLabel;
+  private double totalPrice = 0.0;
+
   private User currUser = new User("Null","Null",false);
 
   // Item class for all products
@@ -84,9 +89,237 @@ public class GUI extends JFrame {
   }
 
   private JPanel createMenu() {
+    int windowWidth = 1200;
+    int windowHeight = 750;
+
+    ImageIcon backgroundIcon = new ImageIcon(".\\images\\bobabackground.png");
+    Image scaledImage = backgroundIcon.getImage().getScaledInstance(windowWidth, windowHeight, Image.SCALE_SMOOTH);
+    ImageIcon resizedIcon = new ImageIcon(scaledImage);
+
+    JLabel backgroundLabel = new JLabel(resizedIcon);
+    backgroundLabel.setBounds(0, 0, windowWidth, windowHeight);
+
+
+    JLayeredPane layeredPane = new JLayeredPane();
+    layeredPane.setPreferredSize(new Dimension(windowWidth, windowHeight));
+
+    // Add top bar for buttons
+    JPanel topBar = new JPanel(new BorderLayout());
+    topBar.setOpaque(false);
+    topBar.setOpaque(false);
+
+    // Add button panel
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    buttonPanel.setOpaque(false);
+    buttonPanel.setOpaque(false);
+    JButton menuButton = createButton("./images/home.png", "Main Menu");
+    JButton inventoryButton = createButton("./images/inventory.png", "Inventory");
+    JButton analyticsButton = createButton("./images/analytics.png", "Analytics");
+
+    // Add functionality to buttons
+    menuButton.addActionListener(e->cardLayout.show(cardPanel,"Menu"));
+    inventoryButton.addActionListener(e -> {
+      if (currUser.isManager) {
+        cardLayout.show(cardPanel, "Inventory");
+      } else {
+        JOptionPane.showMessageDialog(null, "Access Denied: You do not have permission to access Inventory.", "Access Restricted", JOptionPane.WARNING_MESSAGE);
+      }
+    });
+    analyticsButton.addActionListener(e -> {
+      if (currUser.isManager) {
+        cardLayout.show(cardPanel, "Analytics");
+      } else {
+        JOptionPane.showMessageDialog(null, "Access Denied: You do not have permission to access Analytics.", "Access Restricted", JOptionPane.WARNING_MESSAGE);
+      }
+    });
+
+    // Add buttons to button panel
+    buttonPanel.add(menuButton);
+    buttonPanel.add(inventoryButton);
+    buttonPanel.add(analyticsButton);
+
+    // Set up clock
+    // Set up clock
+    timeLabel = new JLabel();
+    timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    timeLabel.setForeground(Color.WHITE);
+    Timer timer = new Timer(1000, e -> updateTime());
+    timer.start();
+    startClock();
+
+    // Create logout button
+    JButton logoutButton = new JButton("Logout");
+    logoutButton.setFont(new Font("Arial", Font.BOLD, 14));
+    logoutButton.addActionListener(e -> logoutUser());
+
+    // Create panel for time and logout button
+    JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    rightPanel.setOpaque(false);
+    rightPanel.add(timeLabel);
+    rightPanel.add(logoutButton);
+    
+    // Add time and buttons to top bar
+    topBar.add(buttonPanel, BorderLayout.WEST);
+    topBar.add(rightPanel, BorderLayout.EAST);
+
+    JPanel menuPanel = new JPanel(new GridLayout(3, 5, 10, 10));
+    menuPanel.setBounds(100, 100, (int) (windowWidth * 0.6), (int) (windowHeight * 0.7));
+    menuPanel.setBackground(new Color(255, 255, 255, 220));
+    menuPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+    ImageIcon brewed_tea = new ImageIcon(".\\images\\Brewed_Tea.png");
+    Image adjust_size = brewed_tea.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    brewed_tea = new ImageIcon(adjust_size);
+
+    ImageIcon milk_tea = new ImageIcon(".\\images\\Milk_Tea.png");
+    adjust_size = milk_tea.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    milk_tea = new ImageIcon(adjust_size);
+
+    ImageIcon fruit_tea = new ImageIcon(".\\images\\FruitTea.png");
+    adjust_size = fruit_tea.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    fruit_tea = new ImageIcon(adjust_size);
+
+    ImageIcon fresh_milk = new ImageIcon(".\\images\\Fresh_Milk.png");
+    adjust_size = fresh_milk.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    fresh_milk = new ImageIcon(adjust_size);
+
+    ImageIcon ice_blended = new ImageIcon(".\\images\\Ice_Blended.png");
+    adjust_size = ice_blended.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    ice_blended = new ImageIcon(adjust_size);
+
+    ImageIcon creama = new ImageIcon(".\\images\\Creama.png");
+    adjust_size = creama.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    creama = new ImageIcon(adjust_size);
+
+    ImageIcon tea_mojito = new ImageIcon(".\\images\\Tea_Mojito.png");
+    adjust_size = tea_mojito.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    tea_mojito = new ImageIcon(adjust_size);
+
+    ImageIcon ice_cream = new ImageIcon(".\\images\\Ice_Cream.png");
+    adjust_size = ice_cream.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    ice_cream = new ImageIcon(adjust_size);
+
+    ImageIcon newItem = new ImageIcon(".\\images\\New.png");
+    adjust_size = newItem.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    newItem = new ImageIcon(adjust_size);
+
+    ImageIcon rewards = new ImageIcon(".\\images\\Rewards.png");
+    adjust_size = rewards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    rewards = new ImageIcon(adjust_size);
+
+    ImageIcon top_order = new ImageIcon(".\\images\\Top.png");
+    adjust_size = top_order.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    top_order = new ImageIcon(adjust_size);
+
+    ImageIcon second = new ImageIcon(".\\images\\Second.png");
+    adjust_size = second.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    second = new ImageIcon(adjust_size);
+
+    ImageIcon third = new ImageIcon(".\\images\\Third.png");
+    adjust_size = third.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+    third = new ImageIcon(adjust_size);
+
+    ImageIcon fourth = new ImageIcon(".\\images\\Fourth.png");
+    adjust_size = fourth.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    fourth = new ImageIcon(adjust_size);
+
+    ImageIcon gift_cards = new ImageIcon(".\\images\\Gift_Card.png");
+    adjust_size = gift_cards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+    gift_cards = new ImageIcon(adjust_size);
+
+    ImageIcon[] menu_items = {brewed_tea, milk_tea, fruit_tea, fresh_milk, ice_blended, creama, tea_mojito, ice_cream, newItem, rewards, top_order, second, third, fourth, gift_cards};
+    String[] categories = {"Brewed Tea", "Milk Tea", "Fruit Tea", "Fresh Milk", "Ice Blended", "Creama", "Tea Mojito", "Ice Cream", "New_Item", "Rewards", "Top Order", "Second", "Third", "Fourth", "Gift Cards"};
+    for(int i = 0; i < 15; i++)
+    {
+      JButton button = new JButton(menu_items[i]);
+      final int index = i;
+      button.addActionListener(e -> showPopup(categories[index]));
+
+      menuPanel.add(button);
+    }
+
+    orderPanel = new JPanel();
+    orderPanel.setBounds((int) (windowWidth * 0.7) + 20, 150, (int) (windowWidth * 0.25) - 40, (int) (windowHeight * 0.6));
+    orderPanel.setBackground(Color.WHITE);
+    orderPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+    JLabel orderTitle = new JLabel("Order", SwingConstants.CENTER);
+    orderTitle.setFont(new Font("Arial", Font.BOLD, 24));
+    orderTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+    orderPanel.add(orderTitle, BorderLayout.NORTH);
+
+    JList<String> orderList = new JList<>(orderListModel);
+    orderList.setFont(new Font("Arial", Font.PLAIN, 10));
+    JScrollPane orderScrollPane = new JScrollPane(orderList);
+    orderPanel.add(orderScrollPane, BorderLayout.CENTER);
+
+    totalPriceLabel = new JLabel("Total: $0.00", SwingConstants.CENTER);
+    totalPriceLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    orderPanel.add(totalPriceLabel, BorderLayout.SOUTH);
+
+    JButton checkoutButton = new JButton("Checkout");
+    checkoutButton.setFont(new Font("Arial", Font.BOLD, 18));
+    checkoutButton.addActionListener(e -> checkout());
+    orderPanel.add(checkoutButton, BorderLayout.SOUTH);
+
+    // Add components to layered pane
+    layeredPane.add(backgroundLabel, Integer.valueOf(0));
+    layeredPane.add(topBar, Integer.valueOf(1));
+    layeredPane.add(menuPanel, Integer.valueOf(1));
+    layeredPane.add(orderPanel, Integer.valueOf(1));
+
     JPanel panel = new JPanel(new BorderLayout());
+    panel.add(layeredPane);
 
     return panel;
+  }
+
+  private void updateTotalPrice(double price) {
+      totalPrice += price;
+      totalPriceLabel.setText(String.format("Total: $%.2f", totalPrice));
+      orderPanel.revalidate();  // Recalculate layout
+      orderPanel.repaint();
+  }
+
+  private void showPopup(String category) {
+      Connection conn = null;
+      String database_name = "team_74_db";
+      String database_user = "team_74";
+      String database_password = "alka";
+      String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
+
+      try {
+        conn = DriverManager.getConnection(database_url, database_user, database_password);
+        
+        // Set up and execute query
+        String query = "SELECT name, id, price FROM Menu WHERE category = ?";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.setString(1, category);
+        ResultSet result = pstmt.executeQuery();
+
+        JDialog popup = new JDialog(this, "Select an Item", true);
+        popup.setSize(400, 300);
+        popup.setLayout(new GridLayout(0, 1));
+
+        while (result.next()) 
+        {
+          int itemId = result.getInt("id");
+          String itemName = result.getString("name");
+
+          JButton itemButton = new JButton(itemName);
+          itemButton.addActionListener(e -> {
+              addItemToOrder(itemId);  // Add the item to the order when clicked
+              popup.dispose();  // Close popup after selection
+          });
+
+          popup.add(itemButton);
+        }
+        popup.setLocationRelativeTo(this);
+        popup.setVisible(true);
+        conn.close();
+      } catch (Exception e){
+        JOptionPane.showMessageDialog(null, "Error accessing Database: " + e);
+      }
   }
 
   // Creates Login Panel
@@ -149,7 +382,7 @@ public class GUI extends JFrame {
         if (authenticateUser(username, password)) {
             userField.setText("");
             passField.setText("");
-            cardLayout.show(cardPanel, "Inventory");
+            cardLayout.show(cardPanel, "Menu");
         } else {
             JOptionPane.showMessageDialog(panel, "Invalid Username or Password", "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
@@ -327,9 +560,11 @@ public class GUI extends JFrame {
     // Add top bar for buttons
     JPanel topBar = new JPanel(new BorderLayout());
     topBar.setOpaque(false);
+    topBar.setOpaque(false);
 
     // Add button panel
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    buttonPanel.setOpaque(false);
     buttonPanel.setOpaque(false);
     JButton menuButton = createButton("./images/home.png", "Main Menu");
     JButton inventoryButton = createButton("./images/inventory.png", "Inventory");
@@ -357,6 +592,7 @@ public class GUI extends JFrame {
     buttonPanel.add(inventoryButton);
     buttonPanel.add(analyticsButton);
 
+    // Set up clock
     // Set up clock
     timeLabel = new JLabel();
     timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -1145,7 +1381,8 @@ public class GUI extends JFrame {
         String name = result.getString("name");
         String category = result.getString("category");
         double price = result.getDouble("price");
-
+        orderListModel.addElement(name + " - $" + price);
+        updateTotalPrice(price);
         Item item = new Item(id, name, category, price);
 
         // Add item to order
@@ -1212,7 +1449,9 @@ public class GUI extends JFrame {
       // Execute Queries
       conn.commit();
       System.out.println("Checkout complete!");
-      
+      orderListModel.clear();
+      totalPrice = 0.0;
+      updateTotalPrice(0.0);
       conn.close();
     } catch (Exception e){
       JOptionPane.showMessageDialog(null, "Error accessing Database: " + e);
