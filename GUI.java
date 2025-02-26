@@ -817,7 +817,7 @@ public class GUI extends JFrame {
     String idStr = JOptionPane.showInputDialog(null, "Enter the ID of the item to edit:", "Edit Item", JOptionPane.QUESTION_MESSAGE);
     if (idStr == null || idStr.trim().isEmpty()) return;
 
-    String nameStr = JOptionPane.showInputDialog(null, "Enter item name to delete:", "Delete Item", JOptionPane.QUESTION_MESSAGE);
+    String nameStr = JOptionPane.showInputDialog(null, "Enter item name to edit:", "Edit Item", JOptionPane.QUESTION_MESSAGE);
     if (nameStr == null || nameStr.trim().isEmpty()) return;
 
     try {
@@ -1050,7 +1050,7 @@ public class GUI extends JFrame {
   // Allows the user to remove an employee
   private void removeUser() {
     // Prompt user for the employee's username to delete
-    String username = JOptionPane.showInputDialog(null, "Enter the username of the employee to delete:", "Delete Employee", JOptionPane.QUESTION_MESSAGE);
+    String username = JOptionPane.showInputDialog(null, "Enter the username of the employee to remove:", "Remove Employee", JOptionPane.QUESTION_MESSAGE);
     if (username == null || username.trim().isEmpty()) return;
 
     // Check if the username exists
@@ -1060,15 +1060,15 @@ public class GUI extends JFrame {
     }
 
     // Confirm deletion
-    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this employee?", 
-                                                "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove this employee?", 
+                                                "Confirm Removal", JOptionPane.YES_NO_OPTION);
     if (confirm != JOptionPane.YES_OPTION) return;
 
     // Delete the employee from the database
     if (removeUserFromDatabase(username)) {
-      JOptionPane.showMessageDialog(null, "Employee deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(null, "Employee removed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     } else {
-      JOptionPane.showMessageDialog(null, "Error deleting employee from database.", "Error", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(null, "Error removing employee from database.", "Error", JOptionPane.ERROR_MESSAGE);
     }
   }
 
