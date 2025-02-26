@@ -81,14 +81,6 @@ public class GUI extends JFrame {
     return panel;
   }
 
-  private JPanel createInventory() {
-    JPanel panel = new JPanel(new BorderLayout());
-    JLabel lbl = new JLabel("Inventory Panel (placeholder)", SwingConstants.CENTER);
-    lbl.setFont(new Font("Arial", Font.BOLD, 24));
-    panel.add(lbl, BorderLayout.CENTER);
-    return panel;
-  }
-  
   // Creates analytics panel
   private JPanel createAnalytics() {
     ImageIcon bgIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
@@ -190,6 +182,14 @@ public class GUI extends JFrame {
     panel.add(centerPanel, BorderLayout.CENTER);
     panel.add(scrollPane, BorderLayout.SOUTH);
 
+    return panel;
+  }
+
+  private JPanel createInventory() {
+    JPanel panel = new JPanel(new BorderLayout());
+    JLabel lbl = new JLabel("Inventory Panel (placeholder)", SwingConstants.CENTER);
+    lbl.setFont(new Font("Arial", Font.BOLD, 24));
+    panel.add(lbl, BorderLayout.CENTER);
     return panel;
   }
 
