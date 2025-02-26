@@ -1,21 +1,13 @@
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
-
-import javax.security.auth.kerberos.KerberosCredMessage;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class GUI extends JFrame {
   private CardLayout cardLayout;
@@ -89,6 +81,12 @@ public class GUI extends JFrame {
 
     add(cardPanel);
     setVisible(true);
+  }
+
+  private JPanel createMenu() {
+    JPanel panel = new JPanel(new BorderLayout());
+
+    return panel;
   }
 
   // Creates Login Panel
@@ -202,12 +200,6 @@ public class GUI extends JFrame {
   // Logs user out
   private void logoutUser(){
     cardLayout.show(cardPanel,"Login");
-  }
-
-  private JPanel createMenu() {
-    JPanel panel = new JPanel(new BorderLayout());
-
-    return panel;
   }
 
   // Creates analytics panel
