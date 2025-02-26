@@ -1,6 +1,9 @@
 import java.sql.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +23,7 @@ public class GUI extends JFrame {
 
   private Vector<Item> order = new Vector<>();
 
+  // Item class for all products
   public static class Item {
     int id;
     String name;
@@ -33,6 +37,7 @@ public class GUI extends JFrame {
       this.price = price;
     }
 
+    // For debugging
     @Override
     public String toString() {
       return "Item{" +
@@ -76,70 +81,100 @@ public class GUI extends JFrame {
 
   // Creates Inventory Panel
   private JPanel createInventory(){
-    JPanel panel = new JPanel(new BorderLayout());
+    ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
+    Image backgroundImage = backgroundIcon.getImage();
 
+    // Set up panel with custom background
+    JPanel panel = new JPanel(new BorderLayout()) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+      }
+    };
     setTitle("Sharetea Inventory");
     setSize(1200, 750);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
 
+    // Add top bar for buttons
     JPanel topBar = new JPanel(new BorderLayout());
+    topBar.setOpaque(false);
 
+    // Add button panel
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    buttonPanel.setOpaque(false);
     JButton menuButton = createButton("./images/home.png", "Main Menu");
     JButton inventoryButton = createButton("./images/inventory.png", "Inventory");
     JButton analyticsButton = createButton("./images/analytics.png", "Analytics");
 
+    // Add functionality to buttons
     menuButton.addActionListener(e->cardLayout.show(cardPanel,"Menu"));
     inventoryButton.addActionListener(e -> cardLayout.show(cardPanel, "Inventory"));
     analyticsButton.addActionListener(e -> cardLayout.show(cardPanel, "Analytics"));
 
+    // Add buttons to button panel
     buttonPanel.add(menuButton);
     buttonPanel.add(inventoryButton);
     buttonPanel.add(analyticsButton);
 
+    // Set up clock
     timeLabel = new JLabel();
     timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
     timeLabel.setForeground(Color.WHITE);
     Timer timer = new Timer(1000, e -> updateTime());
     timer.start();
     startClock();
-
+    
+    // Add time and buttons to top bar
     topBar.add(buttonPanel, BorderLayout.WEST);
     topBar.add(timeLabel, BorderLayout.EAST);
 
+    // Set up inventory title
     JLabel inventoryTitle = new JLabel("Inventory", SwingConstants.CENTER);
-    inventoryTitle.setFont(new Font("Arial", Font.BOLD, 24));
+    inventoryTitle.setFont(new Font("Arial", Font.BOLD, 40));
+    inventoryTitle.setForeground(Color.WHITE);
+    inventoryTitle.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0)); 
 
+    // Set up table
     inventoryTableModel = new DefaultTableModel();
-    inventoryTable = new JTable(inventoryTableModel);
+    inventoryTable = new JTable(inventoryTableModel) {
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+    inventoryTable.setShowGrid(false);
+    inventoryTable.setIntercellSpacing(new Dimension(0, 0));
+    inventoryTable.setRowHeight(30);
+    inventoryTable.setBackground(new Color(255, 255, 255, 200));
+    inventoryTable.setOpaque(false);
     JScrollPane scrollPane = new JScrollPane(inventoryTable);
-
+    scrollPane.setOpaque(false);
+    scrollPane.getViewport().setOpaque(false);
     loadInventoryDataFromDatabase();
 
+    // Add everything to panel
     panel.add(topBar, BorderLayout.NORTH);
     panel.add(inventoryTitle, BorderLayout.CENTER);
     panel.add(scrollPane, BorderLayout.SOUTH);
-
-    addItemToOrder(536);
-    checkout();
 
     return panel;
   }
 
   // Used in createInventory to fill table with database values
   private void loadInventoryDataFromDatabase() {
+    // Set up connection parameters
     Connection conn = null;
-
     String database_name = "team_74_db";
     String database_user = "team_74";
     String database_password = "alka";
     String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
     try {
       conn = DriverManager.getConnection(database_url, database_user, database_password);
-  
+      
+      // Set up and execute query
       Statement stmt = conn.createStatement();
-
       String query = "WITH WeeklyUsage AS (\n" +
                 "    SELECT \n" +
                 "        i.category,\n" +
@@ -166,18 +201,16 @@ public class GUI extends JFrame {
                 "LEFT JOIN LowStockItems ls ON i.category = ls.category\n" +
                 "GROUP BY i.category, wu.weekly_usage\n" +
                 "ORDER BY i.category;";
-
       ResultSet result = stmt.executeQuery(query);
       
+      // Obtain data from query
       ResultSetMetaData metaData = result.getMetaData();
       int colCount = metaData.getColumnCount();
-
       String[] colNames = new String[colCount];
       for(int i = 1; i <= colCount; ++i){
         colNames[i-1] = metaData.getColumnName(i);
       }
       inventoryTableModel.setColumnIdentifiers(colNames);
-
       while(result.next()){
         Object[] rowData = new Object[colCount];
         for(int i = 1; i <= colCount; ++i){
@@ -185,6 +218,18 @@ public class GUI extends JFrame {
         }
         inventoryTableModel.addRow(rowData);
       }
+      
+      // Set style for table
+      DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+      centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+      for (int i = 0; i < inventoryTable.getColumnCount(); i++) {
+        inventoryTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+      }
+      JTableHeader header = inventoryTable.getTableHeader();
+      header.setFont(new Font("Arial", Font.BOLD, 20));
+      header.setForeground(Color.BLACK);
+      header.setBackground(new Color(255, 255, 255));
+      header.setOpaque(true);
       
       conn.close();
     } catch (Exception e){
@@ -203,6 +248,7 @@ public class GUI extends JFrame {
     timeLabel.setText(currentTime);
   }
 
+  // Function to make button from image and label
   private JButton createButton(String imgPath, String label){
     ImageIcon analyticsIcon = new ImageIcon(imgPath);
     Image img = analyticsIcon.getImage().getScaledInstance(60,60,1);
@@ -323,7 +369,6 @@ public class GUI extends JFrame {
       JOptionPane.showMessageDialog(null, "Error accessing Database: " + e);
     }
   }
-
 
   public static void setGlobalFont(Font font) {
     UIManager.getDefaults().keySet().forEach(key -> {

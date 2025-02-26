@@ -14,7 +14,7 @@ items = [
     (17, "Coffee Ice Blended with Ice Cream", "Ice Blended", 6.35),
     (28, "Thai Pearl Milk Tea", "Milk Tea", 5.50),
     (19, "Creama Tea", "Creama", 5.25),
-    (15, "Peach Mojito", "Tea Mojito", 5.50),
+    (16, "Peach Mojito", "Tea Mojito", 5.50),
     (24, "Cocoa Lover with Fresh Milk", "Fresh Milk", 5.25),
     (4, "Oreo Ice Blended with Pearl", "Ice Blended", 6.35)
 ]
