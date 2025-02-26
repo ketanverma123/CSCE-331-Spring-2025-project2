@@ -61,9 +61,9 @@ public class GUI extends JFrame {
     cardPanel = new JPanel(cardLayout);
 
     // Panel Creation
-    JPanel analyticsPanel = createAnalyticsPanel();  // the main analytics panel
-    JPanel inventoryPanel = createInventoryPanel();  // placeholder if you want to switch
-    JPanel mainMenuPanel = createMenuPanel();
+    JPanel analyticsPanel = createAnalytics();  // the main analytics panel
+    JPanel inventoryPanel = createInventory();  // placeholder if you want to switch
+    JPanel mainMenuPanel = createMenu();
 
     cardPanel.add(analyticsPanel, "Analytics");
     cardPanel.add(inventoryPanel, "Inventory");
@@ -73,7 +73,7 @@ public class GUI extends JFrame {
     setVisible(true);
   }
 
-  private JPanel createMenuPanel() {
+  private JPanel createMenu() {
     JPanel panel = new JPanel(new BorderLayout());
     JLabel lbl = new JLabel("Main Menu (placeholder)", SwingConstants.CENTER);
     lbl.setFont(new Font("Arial", Font.BOLD, 24));
@@ -81,7 +81,7 @@ public class GUI extends JFrame {
     return panel;
   }
 
-  private JPanel createInventoryPanel() {
+  private JPanel createInventory() {
     JPanel panel = new JPanel(new BorderLayout());
     JLabel lbl = new JLabel("Inventory Panel (placeholder)", SwingConstants.CENTER);
     lbl.setFont(new Font("Arial", Font.BOLD, 24));
@@ -90,7 +90,7 @@ public class GUI extends JFrame {
   }
   
   // Creates analytics panel
-  private JPanel createAnalyticsPanel() {
+  private JPanel createAnalytics() {
     ImageIcon bgIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image bgImage = bgIcon.getImage();
 
@@ -254,41 +254,6 @@ public class GUI extends JFrame {
       e.printStackTrace();
       JOptionPane.showMessageDialog(this, "Error retrieving analytics data.");
     }
-  }
-  //timer update
-  private void updateTime() {
-    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
-    String currentTime = sdf.format(new Date());
-    timeLabel.setText(currentTime);
-  }
-
-  private void logoutUser() {
-    if (cardLayout != null) {
-      cardLayout.show(cardPanel, "Login");
-    }
-  }
-  //navigation buttons
-  private JButton createNavButton(String imgPath, String label) {
-    ImageIcon icon = new ImageIcon(imgPath);
-    Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-    ImageIcon scaledIcon = new ImageIcon(img);
-
-    JButton button = new JButton(label, scaledIcon);
-    button.setHorizontalTextPosition(SwingConstants.CENTER);
-    button.setVerticalTextPosition(SwingConstants.BOTTOM);
-    button.setFont(new Font("Arial", Font.BOLD, 10));
-    button.setForeground(Color.WHITE);
-
-    button.setBorderPainted(false);
-    button.setFocusPainted(false);
-    button.setContentAreaFilled(false);
-
-    Dimension buttonSize = new Dimension(90, 100);
-    button.setPreferredSize(buttonSize);
-    button.setMinimumSize(buttonSize);
-    button.setMaximumSize(buttonSize);
-
-    return button;
   }
 
   public static void main(String[] args) {
