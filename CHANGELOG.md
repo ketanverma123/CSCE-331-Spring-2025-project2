@@ -24,17 +24,18 @@ ADDED
 - Tea_Mojito.png
 - Third.png
 - Top.png
-- README.md
 
 CHANGED
 - sqlscript.py
 
 REMOVED
 
+
 [Release 2] - 2025-02-19
 
 ADDED
 - sqlscript.py
+- Queries.pdf
 
 CHANGED
 
