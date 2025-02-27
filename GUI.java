@@ -92,16 +92,22 @@ public class GUI extends JFrame {
     int windowWidth = 1200;
     int windowHeight = 750;
 
-    ImageIcon backgroundIcon = new ImageIcon(".\\images\\bobabackground.png");
-    Image scaledImage = backgroundIcon.getImage().getScaledInstance(windowWidth, windowHeight, Image.SCALE_SMOOTH);
-    ImageIcon resizedIcon = new ImageIcon(scaledImage);
+    ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
+    Image backgroundImage = backgroundIcon.getImage();
 
-    JLabel backgroundLabel = new JLabel(resizedIcon);
-    backgroundLabel.setBounds(0, 0, windowWidth, windowHeight);
+    // Set up panel with custom background
+    JPanel panel = new JPanel(new BorderLayout()) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+      }
+    };
 
-
-    JLayeredPane layeredPane = new JLayeredPane();
-    layeredPane.setPreferredSize(new Dimension(windowWidth, windowHeight));
+    setTitle("Sharetea Inventory");
+    setSize(1400, 750);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new BorderLayout());
 
     // Add top bar for buttons
     JPanel topBar = new JPanel(new BorderLayout());
@@ -263,13 +269,17 @@ public class GUI extends JFrame {
     orderPanel.add(checkoutButton, BorderLayout.SOUTH);
 
     // Add components to layered pane
-    layeredPane.add(backgroundLabel, Integer.valueOf(0));
-    layeredPane.add(topBar, Integer.valueOf(1));
-    layeredPane.add(menuPanel, Integer.valueOf(1));
-    layeredPane.add(orderPanel, Integer.valueOf(1));
+    JPanel centerPanel = new JPanel();
+    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
+    centerPanel.add(menuPanel);
+    centerPanel.add(orderPanel);
+    panel.add(topBar, BorderLayout.NORTH);
+    panel.add(centerPanel, BorderLayout.CENTER);
 
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(layeredPane);
+    // layeredPane.add(backgroundLabel, Integer.valueOf(0));
+    // layeredPane.add(topBar, Integer.valueOf(1));
+    // layeredPane.add(menuPanel, Integer.valueOf(1));
+    // layeredPane.add(orderPanel, Integer.valueOf(1));
 
     return panel;
   }
