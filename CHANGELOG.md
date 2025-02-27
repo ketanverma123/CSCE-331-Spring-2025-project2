@@ -36,6 +36,7 @@ REMOVED
 ADDED
 - sqlscript.py
 - Queries.pdf
+- README.md
 
 CHANGED
 
