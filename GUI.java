@@ -23,6 +23,7 @@ public class GUI extends JFrame {
 
   private Vector<Item> order = new Vector<>();
 
+  //Global variables for calculating an individuals order for the GUI
   private DefaultListModel<String> orderListModel = new DefaultListModel<>();
   private JPanel orderPanel;
   private JLabel totalPriceLabel;
@@ -91,7 +92,7 @@ public class GUI extends JFrame {
   private JPanel createMenu() {
     int windowWidth = 1200;
     int windowHeight = 750;
-
+    
     ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image backgroundImage = backgroundIcon.getImage();
 
@@ -145,7 +146,6 @@ public class GUI extends JFrame {
     buttonPanel.add(analyticsButton);
 
     // Set up clock
-    // Set up clock
     timeLabel = new JLabel();
     timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
     timeLabel.setForeground(Color.WHITE);
@@ -168,11 +168,13 @@ public class GUI extends JFrame {
     topBar.add(buttonPanel, BorderLayout.WEST);
     topBar.add(rightPanel, BorderLayout.EAST);
 
+    //Create a panel for that categorizes all the possible menu items
     JPanel menuPanel = new JPanel(new GridLayout(3, 5, 10, 10));
     menuPanel.setBounds(100, 100, (int) (windowWidth * 0.6), (int) (windowHeight * 0.7));
     menuPanel.setBackground(new Color(255, 255, 255, 220));
     menuPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-
+    
+    //Customizes buttons for each menu category
     ImageIcon brewed_tea = new ImageIcon(".\\images\\Brewed_Tea.png");
     Image adjust_size = brewed_tea.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
     brewed_tea = new ImageIcon(adjust_size);
@@ -233,8 +235,11 @@ public class GUI extends JFrame {
     adjust_size = gift_cards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
     gift_cards = new ImageIcon(adjust_size);
 
+    //Array for each menu category (One for the GUI Buttons, the other for the SQL Queries and their category name
     ImageIcon[] menu_items = {brewed_tea, milk_tea, fruit_tea, fresh_milk, ice_blended, creama, tea_mojito, ice_cream, newItem, rewards, top_order, second, third, fourth, gift_cards};
     String[] categories = {"Brewed Tea", "Milk Tea", "Fruit Tea", "Fresh Milk", "Ice Blended", "Creama", "Tea Mojito", "Ice Cream", "New_Item", "Rewards", "Top Order", "Second", "Third", "Fourth", "Gift Cards"};
+    
+    //Loads Buttons and Queries once button is selected
     for(int i = 0; i < 15; i++)
     {
       JButton button = new JButton(menu_items[i]);
@@ -244,6 +249,7 @@ public class GUI extends JFrame {
       menuPanel.add(button);
     }
 
+    //Order Panel keeps track of one's order
     orderPanel = new JPanel();
     orderPanel.setBounds((int) (windowWidth * 0.7) + 20, 150, (int) (windowWidth * 0.25) - 40, (int) (windowHeight * 0.6));
     orderPanel.setBackground(Color.WHITE);
@@ -254,6 +260,7 @@ public class GUI extends JFrame {
     orderTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     orderPanel.add(orderTitle, BorderLayout.NORTH);
 
+    //stores an individuals order
     JList<String> orderList = new JList<>(orderListModel);
     orderList.setFont(new Font("Arial", Font.PLAIN, 10));
     JScrollPane orderScrollPane = new JScrollPane(orderList);
@@ -263,6 +270,7 @@ public class GUI extends JFrame {
     totalPriceLabel.setFont(new Font("Arial", Font.BOLD, 18));
     orderPanel.add(totalPriceLabel, BorderLayout.SOUTH);
 
+    //Clears order and stores in database
     JButton checkoutButton = new JButton("Checkout");
     checkoutButton.setFont(new Font("Arial", Font.BOLD, 18));
     checkoutButton.addActionListener(e -> checkout());
@@ -287,10 +295,11 @@ public class GUI extends JFrame {
   private void updateTotalPrice(double price) {
       totalPrice += price;
       totalPriceLabel.setText(String.format("Total: $%.2f", totalPrice));
-      orderPanel.revalidate();  // Recalculate layout
+      orderPanel.revalidate();  //If you add items to your order, update the order panel with its new price
       orderPanel.repaint();
   }
 
+  //Lets you select a specific menu item from the category on the main menu
   private void showPopup(String category) {
       Connection conn = null;
       String database_name = "team_74_db";
