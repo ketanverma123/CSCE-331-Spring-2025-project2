@@ -18,8 +18,6 @@ public class GUI extends JFrame {
 
   private JTable inventoryTable;
   private DefaultTableModel inventoryTableModel;
-  
-  private JLabel timeLabel;
 
   private Vector<Item> order = new Vector<>();
 
@@ -95,6 +93,7 @@ public class GUI extends JFrame {
     
     ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image backgroundImage = backgroundIcon.getImage();
+    JLabel timeLabel;
 
     // Set up panel with custom background
     JPanel panel = new JPanel(new BorderLayout()) {
@@ -149,9 +148,8 @@ public class GUI extends JFrame {
     timeLabel = new JLabel();
     timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
     timeLabel.setForeground(Color.WHITE);
-    Timer timer = new Timer(1000, e -> updateTime());
+    Timer timer = new Timer(1000, e -> updateTime(timeLabel));
     timer.start();
-    startClock();
 
     // Create logout button
     JButton logoutButton = new JButton("Logout");
@@ -458,6 +456,7 @@ public class GUI extends JFrame {
   private JPanel createAnalytics() {
     ImageIcon bgIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image bgImage = bgIcon.getImage();
+    JLabel timeLabel;
 
     JPanel panel = new JPanel(new BorderLayout()) {
       @Override
@@ -497,14 +496,12 @@ public class GUI extends JFrame {
     JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     rightPanel.setOpaque(false);
 
+    // Set up clock
     timeLabel = new JLabel();
     timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
     timeLabel.setForeground(Color.WHITE);
-
-    // timer
-    Timer timer = new Timer(1000, evt -> updateTime());
+    Timer timer = new Timer(1000, e -> updateTime(timeLabel));
     timer.start();
-    updateTime(); 
 
     JButton logoutButton = new JButton("Logout");
     logoutButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -562,6 +559,7 @@ public class GUI extends JFrame {
   private JPanel createInventory(){
     ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image backgroundImage = backgroundIcon.getImage();
+    JLabel timeLabel;
 
     // Set up panel with custom background
     JPanel panel = new JPanel(new BorderLayout()) {
@@ -616,9 +614,8 @@ public class GUI extends JFrame {
     timeLabel = new JLabel();
     timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
     timeLabel.setForeground(Color.WHITE);
-    Timer timer = new Timer(1000, e -> updateTime());
+    Timer timer = new Timer(1000, e -> updateTime(timeLabel));
     timer.start();
-    startClock();
 
     // Create logout button
     JButton logoutButton = new JButton("Logout");
@@ -1340,16 +1337,10 @@ public class GUI extends JFrame {
     }
   }
 
-
-  private void startClock() {
-    Timer timer = new Timer(1000, e -> updateTime());
-    timer.start();
-  }
-
-  private void updateTime() {
+  private void updateTime(JLabel label) {
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
     String currentTime = sdf.format(new Date());
-    timeLabel.setText(currentTime);
+    label.setText(currentTime);
   }
 
   // Function to make button from image and label
