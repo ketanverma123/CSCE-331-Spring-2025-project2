@@ -323,7 +323,7 @@ public class Analytics extends JFrame {
         String database_password = "alka";
         String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
 
-        // Generate hours from 11AM to 11PM
+        // Generate hours from 11AM to 
         String sql =
             "SELECT hrs.hour, " +
             "       COALESCE(sales_data.sales_count, 0) AS sales_count, " +
