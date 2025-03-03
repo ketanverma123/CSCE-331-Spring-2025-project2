@@ -40,10 +40,12 @@ public class LoginPanel extends JFrame{
 
         JLabel userLabel = new JLabel("Username:");
         userLabel.setFont(new   Font("Arial", Font.BOLD, 18));
+        userLabel.setForeground(Color.WHITE);
         JTextField userField = new JTextField(15);
 
         JLabel passLabel = new JLabel("Password:");
         passLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        passLabel.setForeground(Color.WHITE);
         JPasswordField passField = new JPasswordField(15);
 
         JButton loginButton = new JButton("Login");

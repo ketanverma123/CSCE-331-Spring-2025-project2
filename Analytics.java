@@ -162,7 +162,7 @@ public class Analytics extends JFrame {
         timeWindowControlPanel.add(loadTimeWindowButton);
 
         timeWindowTableModel = new DefaultTableModel(
-            new String[] { "Item Name", "Total Used (Time Window)" }, 0
+            new String[] { "Item Name", "Total Used" }, 0
         );
         timeWindowTable = new JTable(timeWindowTableModel) {
             @Override
