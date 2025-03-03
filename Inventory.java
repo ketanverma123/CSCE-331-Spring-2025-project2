@@ -34,7 +34,6 @@ public class Inventory extends JFrame{
         };
         setTitle("Sharetea Inventory");
         setSize(1200, 750);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Add top bar for buttons

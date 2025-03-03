@@ -27,7 +27,6 @@ public class LoginPanel extends JFrame{
         };
         setTitle("User Login");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Create form panel

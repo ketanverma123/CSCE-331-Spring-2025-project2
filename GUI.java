@@ -20,6 +20,7 @@
     {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         LoginPanel login = new LoginPanel();
         JPanel loginPanel = login.createLoginPanel();

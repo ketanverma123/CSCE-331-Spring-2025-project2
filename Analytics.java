@@ -4,6 +4,11 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+/*
+ * Class composed of functions needed to run analytics panel
+ * 
+ * @author Ketan Verma
+ */
 public class Analytics extends JFrame {
     private JTable categoryTable;
     private DefaultTableModel categoryTableModel;
