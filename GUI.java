@@ -9,6 +9,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+/* GUI class contructs GUI
+ * (Our actual class file is long and needs to be broken up into multiple files)
+ * 
+ * @author Landon Delgado, Ketan Verma, Ayush Shah
+ * 
+ */
 public class GUI extends JFrame {
   private CardLayout cardLayout;
   private JPanel cardPanel;
@@ -29,7 +35,11 @@ public class GUI extends JFrame {
 
   private User currUser = new User("Null","Null",false);
 
-  // Item class for all products
+  /*
+   * Item class for products
+   * 
+   * @author Landon Delgado
+   */
   public static class Item {
     int id;
     String name;
@@ -55,6 +65,11 @@ public class GUI extends JFrame {
     }
   }
 
+  /*
+   * Class to define a user to distinguish cashiers and managers
+   * 
+   * @author Landon Delgado
+   */
   public static class User{
     String username;
     String password;
@@ -67,7 +82,11 @@ public class GUI extends JFrame {
     }
   }
 
-  // Main handler to switch between panels
+  /*
+   * Constructor for GUI
+   * 
+   * @author Landon Delgado, Ketan Verma, Landon Delgado
+   */
   public GUI()
   {
     cardLayout = new CardLayout();
@@ -87,6 +106,11 @@ public class GUI extends JFrame {
     setVisible(true);
   }
 
+  /*
+   * Creates the menu panel
+   * 
+   * @return menu_panel
+   */
   private JPanel createMenu() {
     int windowWidth = 1200;
     int windowHeight = 750;
@@ -290,6 +314,12 @@ public class GUI extends JFrame {
     return panel;
   }
 
+  /*
+   * Updates the total of current transaction
+   * 
+   * @param price price of the item veing added
+   * @return void
+   */
   private void updateTotalPrice(double price) {
       totalPrice += price;
       totalPriceLabel.setText(String.format("Total: $%.2f", totalPrice));
@@ -297,7 +327,12 @@ public class GUI extends JFrame {
       orderPanel.repaint();
   }
 
-  //Lets you select a specific menu item from the category on the main menu
+  /* 
+   * Shows the popup to select a drink within a certain category
+   * 
+   * @param category category needed to populate popup
+   * @return void 
+   */
   private void showPopup(String category) {
       Connection conn = null;
       String database_name = "team_74_db";
@@ -339,7 +374,11 @@ public class GUI extends JFrame {
       }
   }
 
-  // Creates Login Panel
+  /*
+   * Creates the login panel
+   * 
+   * @return Returns the login panel
+   */
   private JPanel createLoginPanel() {
     ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image backgroundImage = backgroundIcon.getImage();
@@ -411,7 +450,13 @@ public class GUI extends JFrame {
     return panel;
   }
 
-  // Authenticates user login from database
+  /*
+   * Authenticates the user from the database
+   * 
+   * @param username The username entered into login panel
+   * @param password Password entered into login panel
+   * @return Boolean based on if the user was authenticated
+   */
   private boolean authenticateUser(String username, String password) {
     // Set up connection parameters
     Connection conn = null;
@@ -447,12 +492,21 @@ public class GUI extends JFrame {
     return false;
   }
 
-  // Logs user out
+  /*
+   * Logs out the current user
+   * 
+   * @return none (void)
+   */
   private void logoutUser(){
     cardLayout.show(cardPanel,"Login");
   }
 
-  // Creates analytics panel
+  /* 
+   * Creates the analytics panel
+   * 
+   * @author ketan verma 
+   * @return the analytics panel 
+   */
   private JPanel createAnalytics() {
     ImageIcon bgIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image bgImage = bgIcon.getImage();
@@ -555,7 +609,11 @@ public class GUI extends JFrame {
     return panel;
   }
 
-  // Creates Inventory Panel
+  /*
+   * Creates the inventory panel
+   * 
+   * @return Inventory panel
+   */
   private JPanel createInventory(){
     ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
     Image backgroundImage = backgroundIcon.getImage();
@@ -698,7 +756,11 @@ public class GUI extends JFrame {
     return panel;
   }
 
-  //data for queries
+  /* 
+   * Loads analytics table data from the database
+   * 
+   * @return void 
+   */
   private void loadAnalyticsDataFromDatabase() {
     analyticsTableModel.setRowCount(0); 
 
@@ -761,7 +823,11 @@ public class GUI extends JFrame {
     }
   }
 
-  // Used in createInventory to fill table with database values
+  /*
+   * Loads the inventory table data from the database
+   * 
+   * @return none (void)
+   */
   private void loadInventoryDataFromDatabase() {
     inventoryTableModel.setRowCount(0);
     // Set up connection parameters
@@ -837,7 +903,11 @@ public class GUI extends JFrame {
     }
   }
 
-  // Allows user to add stock to inventory
+  /*
+   * Adds stock to inventory in database and updates local table
+   * 
+   * @return none (void)
+   */
   private void addStock() {
     // Prompt the user for input
     String itemName = JOptionPane.showInputDialog(null, "Enter item name:", "Add Stock", JOptionPane.QUESTION_MESSAGE);
@@ -1468,6 +1538,12 @@ public class GUI extends JFrame {
     }
   }
 
+  /*
+  * Updates font for whole GUI
+  * 
+  * @param font font type that you want to be set
+  * @return nothing (void function)
+  */
   public static void setGlobalFont(Font font) {
     UIManager.getDefaults().keySet().forEach(key -> {
       if (key.toString().toLowerCase().contains("font")) {
