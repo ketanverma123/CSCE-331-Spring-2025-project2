@@ -4,6 +4,11 @@ CHANGELOG
 
 ADDED
 - GUI.java
+- Inventory.java
+- Item.java
+- Menu.java
+- LoginPanel.java
+- Analytics.java
 - postgresql-42.7.5.jar
 - analytics.png
 - bobabackground.png
