@@ -103,16 +103,16 @@ public class GUI extends JFrame {
     cardPanel.add(analyticsPanel, "Analytics");
 
     add(cardPanel);
+    pack();
+    setLocationRelativeTo(null);
     setVisible(true);
   }
-
   /*
-   * Creates the menu panel
-   * 
+   * @author Ayush Shah
    * @return menu_panel
    */
   private JPanel createMenu() {
-    int windowWidth = 1200;
+    int windowWidth = 1300;
     int windowHeight = 750;
     
     ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
@@ -129,7 +129,7 @@ public class GUI extends JFrame {
     };
 
     setTitle("Sharetea Inventory");
-    setSize(1400, 750);
+    panel.setPreferredSize(new Dimension(1300, 750));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
 
@@ -286,6 +286,7 @@ public class GUI extends JFrame {
     JList<String> orderList = new JList<>(orderListModel);
     orderList.setFont(new Font("Arial", Font.PLAIN, 10));
     JScrollPane orderScrollPane = new JScrollPane(orderList);
+    orderScrollPane.setPreferredSize(new Dimension(300, 500));
     orderPanel.add(orderScrollPane, BorderLayout.CENTER);
 
     totalPriceLabel = new JLabel("Total: $0.00", SwingConstants.CENTER);
@@ -313,7 +314,6 @@ public class GUI extends JFrame {
 
     return panel;
   }
-
   /*
    * Updates the total of current transaction
    * 
