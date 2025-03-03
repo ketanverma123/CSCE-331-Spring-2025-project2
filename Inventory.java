@@ -5,6 +5,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+/*
+ * Class composed of functions necesary to run the Inventory panel
+ * 
+ * @author Landon Delgado
+ */
 public class Inventory extends JFrame{
     private JTable inventoryTable;
     private DefaultTableModel inventoryTableModel;
@@ -157,7 +162,7 @@ public class Inventory extends JFrame{
     }
 
     /*
-    * Loads the inventory table data from the database
+    * Loads and populates the inventory table from the database
     * 
     * @return none (void)
     */
@@ -269,7 +274,13 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Updates the stock value in the database
+    /*
+     * Add 'amount' number of stock for 'itemName' in the database
+     * 
+     * @param itemName Name of the item to be updated
+     * @param amount Amount of stock to add
+     * @return boolean Whether item was added successfully
+     */
     private boolean updateStockInDatabase(String itemName, double amount) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -292,7 +303,11 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Allows user to create new menu item
+    /*
+     * Displays a prompt to create a new menu item
+     * 
+     * @return none (void)
+     */
     private void createItem() {
         // Prompt user for item details
         String idStr = JOptionPane.showInputDialog(null, "Enter item ID:", "Create Item", JOptionPane.QUESTION_MESSAGE);
@@ -336,7 +351,13 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Checks if an item is already in the menu
+    /*
+     * Checks if an item is already on the menu
+     * 
+     * @param itemId The id of the item to check
+     * @param itemName The name of the item to check
+     * @return boolean True if item is already in the menu
+     */
     private boolean itemInMenu(int itemId, String itemName) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -359,7 +380,15 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Adds new menu item to database
+    /*
+     * Inserts a new item into the database
+     * 
+     * @param itemId The id of the item to add
+     * @param itemName The name of the item to add
+     * @param category The category of the item to add
+     * @param price The price of the item to add
+     * @return boolean True if item was successfully added to the database
+     */
     private boolean addItemToDatabase(int itemId, String itemName, String category, double price) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -393,7 +422,11 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Allows user to delete item from menu
+    /*
+     * Displays a prompt to delete an item from the menu
+     * 
+     * @return none (void)
+     */
     private void deleteMenuItem() {
         // Prompt user for item ID
         String idStr = JOptionPane.showInputDialog(null, "Enter item ID to delete:", "Delete Item", JOptionPane.QUESTION_MESSAGE);
@@ -429,7 +462,12 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Deletes an item from the database
+    /*
+     * Deletes an item from the database
+     * 
+     * @param itemId The item to be deleted
+     * @return boolean True if item was successfully deleted
+     */
     private boolean deleteItemFromDatabase(int itemId) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -458,7 +496,11 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Allows user to edit menu item
+    /*
+     * Prompts the user to edit a database item
+     * 
+     * @return none (void)
+     */
     private void editItem() {
         // Prompt user for item ID
         String idStr = JOptionPane.showInputDialog(null, "Enter the ID of the item to edit:", "Edit Item", JOptionPane.QUESTION_MESSAGE);
@@ -517,7 +559,16 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Updates menu item in database
+    /*
+     * Updates an item with new values in the database
+     * 
+     * @param oldItemId The id of the item to be changed
+     * @param newItemId The id the item should be changed to
+     * @param newName The name the item should be changed to
+     * @param newCategory The category the item should be changed to
+     * @param newPrice The price the item should be changed to
+     * @return boolean True if the update was successful
+     */
     private boolean updateItemInDatabase(int oldItemId, int newItemId, String newName, String newCategory, double newPrice) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -548,12 +599,16 @@ public class Inventory extends JFrame{
         return true;
 
         } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 
-    // Allows user to add employee
+    /*
+     * Prompts the user to add a new user
+     * 
+     * @return none (void)
+     */
     private void addUser() {
         // Prompt user for employee details
         String username = JOptionPane.showInputDialog(null, "Enter new employee username:", "Add Employee", JOptionPane.QUESTION_MESSAGE);
@@ -582,7 +637,12 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Makes sure username is not taken
+    /*
+     * Checks if the given username already exists
+     * 
+     * @param username The username that should be checked
+     * @return boolean True if the username is taken
+     */
     private boolean isUsernameTaken(String username) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -603,7 +663,14 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Adds the user into the database
+    /*
+     * Adds a new user to the database
+     * 
+     * @param username The username of the user to be added
+     * @param password The password of the user to be added
+     * @param isManager Whether hte user is a manager or not
+     * @return boolean True if the user is successfully added
+     */
     private boolean addUserToDatabase(String username, String password, boolean isManager) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -627,7 +694,12 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Allows user to edit employee
+    /*
+     * Prompts the user to edit an employees values
+     * (*Note must be a manager to access this)
+     * 
+     * @return none (void)
+     */
     private void editUser() {
         // Prompt user for the employee's username to edit
         String oldUsername = JOptionPane.showInputDialog(null, "Enter the username of the employee to edit:", "Edit Employee", JOptionPane.QUESTION_MESSAGE);
@@ -669,7 +741,15 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Updates the employee in the database
+    /*
+     * Updates user values in database
+     * 
+     * @param oldUsername The previous username that should be changed
+     * @param newUsername The username the user should be changed to
+     * @param newPassword The user's new password
+     * @param isManager Whether or not the user is a manager
+     * @return boolean True if the update was successful
+     */
     private boolean updateUserInDatabase(String oldUsername, String newUsername, String newPassword, boolean isManager) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
@@ -694,7 +774,11 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Allows the user to remove an employee
+    /*
+     * Prompts the user to remove another user
+     * 
+     * @return none (void)
+     */
     private void removeUser() {
         // Prompt user for the employee's username to delete
         String username = JOptionPane.showInputDialog(null, "Enter the username of the employee to remove:", "Remove Employee", JOptionPane.QUESTION_MESSAGE);
@@ -719,7 +803,12 @@ public class Inventory extends JFrame{
         }
     }
 
-    // Removes an employee from the database
+    /*
+     * Removes a given employee from the database
+     * 
+     * @param username The username of the user to be removed
+     * @return boolean True if the removal was successful
+     */
     private boolean removeUserFromDatabase(String username) {
         String databaseUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/team_74_db";
         String databaseUser = "team_74";
