@@ -16,7 +16,9 @@ public class Item {
     this.price = price;
     }
 
-    // For debugging
+    /*
+     * Override function to output the Item as a string for debugging purposes
+     */
     @Override
     public String toString() {
     return "Item{" +

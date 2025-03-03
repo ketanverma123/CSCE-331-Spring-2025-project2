@@ -2,6 +2,11 @@ import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 
+/*
+ * Class composed of functions necessary to run the login panel
+ * 
+ * @author Landon Delgado
+ */
 public class LoginPanel extends JFrame{
     /*
     * Creates the login panel

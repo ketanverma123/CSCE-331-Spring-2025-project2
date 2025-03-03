@@ -3,11 +3,9 @@
     import java.util.Date;
     import javax.swing.*;
 
-    /* GUI class contructs GUI
-    * (Our actual class file is long and needs to be broken up into multiple files)
+    /* Compiles all panels into one to construct the overall GUI
     * 
     * @author Landon Delgado, Ketan Verma, Ayush Shah
-    * 
     */
     public class GUI extends JFrame {
     public static CardLayout cardLayout;
@@ -17,8 +15,6 @@
 
     /*
     * Constructor for GUI
-    * 
-    * @author Landon Delgado, Ketan Verma, Landon Delgado
     */
     public GUI()
     {
@@ -54,13 +50,24 @@
         cardLayout.show(cardPanel,"Login");
     }
 
+    /*
+     * Function to update the timers
+     * 
+     * @param label The label which is showing the time
+     * @return none (void)
+     */
     public static void updateTime(JLabel label) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
         String currentTime = sdf.format(new Date());
         label.setText(currentTime);
     }
 
-    // Function to make button from image and label
+    /*
+     * General function to create top bar buttons which are used across all screens
+     * 
+     * @param imgPath The path to the image which will be used by the button
+     * @param label Label to be added to button
+     */
     public static JButton createButton(String imgPath, String label){
         ImageIcon analyticsIcon = new ImageIcon(imgPath);
         Image img = analyticsIcon.getImage().getScaledInstance(60,60,1);
