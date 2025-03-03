@@ -1,3 +1,2 @@
-GUI.class
-GUI$*.class
+*.class
 ORACLE_JDK-23/*
