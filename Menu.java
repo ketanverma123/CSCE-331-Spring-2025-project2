@@ -17,7 +17,7 @@ public class Menu extends JFrame{
     private double totalPrice = 0.0;
 
     /*
-    * @author Ayush Shah
+    * Creates menu panel
     * @return menu_panel
     */
     public JPanel createMenu() {
@@ -239,7 +239,7 @@ public class Menu extends JFrame{
     /* 
     * Shows the popup to select a drink within a certain category
     * 
-    * @param category category needed to populate popup
+    * @param category is the different categories the drinks/items are divided into
     * @return void 
     */
     private void showPopup(String category) {
@@ -304,6 +304,12 @@ public class Menu extends JFrame{
 
 
     // Puts menu item into order vector given an id
+    /* 
+    * Adds an item selected by the cashier to the shopping cart of items the customer wants to purchase
+    * 
+    * @param id utilizes item id to add a specific item based on the unique value it is assigned to the order
+    * @return void 
+    */
     private void addItemToOrder(Integer id){
         
         // Set up connection parameters
@@ -368,6 +374,11 @@ public class Menu extends JFrame{
     }
 
     // Empties order vector and updates inventory and sales tables in database
+    /* 
+    * Completes a transaction/purchase of a customers order by adding it to the database and clearing the order screen for the next order
+    * 
+    * @return void 
+    */
     private void checkout(){
         // Dont proceed with logic if empty order
         if(order.isEmpty()){
