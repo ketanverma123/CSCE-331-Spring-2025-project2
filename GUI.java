@@ -18,10 +18,12 @@
     */
     public GUI()
     {
+        // Card panel for switching between panels
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Create an instance of each panel
         LoginPanel login = new LoginPanel();
         JPanel loginPanel = login.createLoginPanel();
         Menu menu = new Menu();
@@ -31,11 +33,13 @@
         Inventory inventory = new Inventory();
         JPanel inventoryPanel = inventory.createInventory();
 
+        // Add all panels to cardpanel
         cardPanel.add(loginPanel, "Login");
         cardPanel.add(mainMenuPanel, "Menu");
         cardPanel.add(inventoryPanel, "Inventory");
         cardPanel.add(analyticsPanel, "Analytics");
 
+        // Show card panel
         add(cardPanel);
         pack();
         setLocationRelativeTo(null);
@@ -70,17 +74,18 @@
      * @param label Label to be added to button
      */
     public static JButton createButton(String imgPath, String label){
+        // Prepare image icon
         ImageIcon analyticsIcon = new ImageIcon(imgPath);
         Image img = analyticsIcon.getImage().getScaledInstance(60,60,1);
         ImageIcon scaledIcon = new ImageIcon(img);
 
         JButton button = new JButton(label,scaledIcon);
 
+        // Format button
         button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
         button.setFont(new Font("Arial", Font.BOLD, 10));
         button.setForeground(Color.WHITE);
-
         Dimension buttonSize = new Dimension(90,100);
         button.setPreferredSize(buttonSize);
         button.setMinimumSize(buttonSize);

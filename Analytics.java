@@ -73,6 +73,7 @@ public class Analytics extends JFrame {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setOpaque(false);
 
+        // time label creation
         JLabel timeLabel = new JLabel();
         timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
         timeLabel.setForeground(Color.WHITE);
@@ -86,6 +87,7 @@ public class Analytics extends JFrame {
         rightPanel.add(timeLabel);
         rightPanel.add(logoutButton);
 
+        //adding top bar
         topBar.add(navPanel, BorderLayout.WEST);
         topBar.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(topBar, BorderLayout.NORTH);
@@ -94,6 +96,7 @@ public class Analytics extends JFrame {
         analyticsTitle.setFont(new Font("Arial", Font.BOLD, 40));
         analyticsTitle.setForeground(Color.WHITE);
 
+        //adding title panel
         JPanel titlePanel = new JPanel();
         titlePanel.setOpaque(false);
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
@@ -107,6 +110,7 @@ public class Analytics extends JFrame {
         JTabbedPane analyticsTabs = new JTabbedPane();
         analyticsTabs.setOpaque(false);
 
+        //adding category panel
         JPanel categoryPanel = new JPanel(new BorderLayout());
         categoryPanel.setOpaque(false);
 
@@ -117,6 +121,7 @@ public class Analytics extends JFrame {
                 return false;
             }
         };
+        //setting dimensions of table
         categoryTable.setRowHeight(30);
         categoryTable.setShowGrid(false);
         categoryTable.setIntercellSpacing(new Dimension(0, 0));
@@ -136,6 +141,7 @@ public class Analytics extends JFrame {
         loadCategorySummaryData();
         analyticsTabs.addTab("Category Summary", categoryPanel);
 
+        //time window panel layout 
         JPanel timeWindowPanel = new JPanel(new BorderLayout());
         timeWindowPanel.setOpaque(false);
 
@@ -155,6 +161,7 @@ public class Analytics extends JFrame {
             loadItemUsageWithinTimeWindow(start, end);
         });
 
+        //time window panel accesories
         timeWindowControlPanel.add(startLabel);
         timeWindowControlPanel.add(startField);
         timeWindowControlPanel.add(endLabel);
@@ -162,7 +169,7 @@ public class Analytics extends JFrame {
         timeWindowControlPanel.add(loadTimeWindowButton);
 
         timeWindowTableModel = new DefaultTableModel(
-            new String[] { "Item Name", "Total Used (Time Window)" }, 0
+            new String[] { "Item Name", "Total Used" }, 0
         );
         timeWindowTable = new JTable(timeWindowTableModel) {
             @Override
@@ -177,6 +184,7 @@ public class Analytics extends JFrame {
         timeWindowPanel.add(timeWindowScroll, BorderLayout.CENTER);
         analyticsTabs.addTab("Time Window Usage", timeWindowPanel);
 
+        // hourly sales panel call
         JPanel hourlySalesPanel = new JPanel(new BorderLayout());
         hourlySalesPanel.setOpaque(false);
 
