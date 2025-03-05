@@ -72,7 +72,6 @@ public class Inventory extends JFrame{
         buttonPanel.add(analyticsButton);
 
         // Set up clock
-        // Set up clock
         timeLabel = new JLabel();
         timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
         timeLabel.setForeground(Color.WHITE);

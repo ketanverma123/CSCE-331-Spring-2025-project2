@@ -4,6 +4,10 @@ import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
+/*  Creates the POS system/main menu
+    * @author Ayush Shah
+    *
+*/
 public class Menu extends JFrame{
     //Global variables for calculating an individuals order for the GUI
     private Vector<Item> order = new Vector<>();
@@ -17,7 +21,7 @@ public class Menu extends JFrame{
     * @return menu_panel
     */
     public JPanel createMenu() {
-        int windowWidth = 1300;
+        int windowWidth = 1200;
         int windowHeight = 750;
         
         ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("/images/bobabackground.png"));
@@ -34,8 +38,7 @@ public class Menu extends JFrame{
         };
 
         setTitle("Sharetea Inventory");
-        panel.setPreferredSize(new Dimension(1300, 750));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        panel.setPreferredSize(new Dimension(1200, 750));
         setLayout(new BorderLayout());
 
         // Add top bar for buttons
@@ -130,17 +133,17 @@ public class Menu extends JFrame{
         adjust_size = tea_mojito.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
         tea_mojito = new ImageIcon(adjust_size);
 
-        ImageIcon ice_cream = new ImageIcon(".\\images\\Ice_Cream.png");
-        adjust_size = ice_cream.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
-        ice_cream = new ImageIcon(adjust_size);
+        // ImageIcon ice_cream = new ImageIcon(".\\images\\Ice_Cream.png");
+        // adjust_size = ice_cream.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+        // ice_cream = new ImageIcon(adjust_size);
 
         ImageIcon newItem = new ImageIcon(".\\images\\New.png");
         adjust_size = newItem.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
         newItem = new ImageIcon(adjust_size);
 
-        ImageIcon rewards = new ImageIcon(".\\images\\Rewards.png");
-        adjust_size = rewards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
-        rewards = new ImageIcon(adjust_size);
+        // ImageIcon rewards = new ImageIcon(".\\images\\Rewards.png");
+        // adjust_size = rewards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+        // rewards = new ImageIcon(adjust_size);
 
         ImageIcon top_order = new ImageIcon(".\\images\\Top.png");
         adjust_size = top_order.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
@@ -158,16 +161,16 @@ public class Menu extends JFrame{
         adjust_size = fourth.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
         fourth = new ImageIcon(adjust_size);
 
-        ImageIcon gift_cards = new ImageIcon(".\\images\\Gift_Card.png");
-        adjust_size = gift_cards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
-        gift_cards = new ImageIcon(adjust_size);
+        // ImageIcon gift_cards = new ImageIcon(".\\images\\Gift_Card.png");
+        // adjust_size = gift_cards.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
+        // gift_cards = new ImageIcon(adjust_size);
 
         //Array for each menu category (One for the GUI Buttons, the other for the SQL Queries and their category name
-        ImageIcon[] menu_items = {brewed_tea, milk_tea, fruit_tea, fresh_milk, ice_blended, creama, tea_mojito, ice_cream, newItem, rewards, top_order, second, third, fourth, gift_cards};
-        String[] categories = {"Brewed Tea", "Milk Tea", "Fruit Tea", "Fresh Milk", "Ice Blended", "Creama", "Tea Mojito", "Ice Cream", "New_Item", "Rewards", "Top Order", "Second", "Third", "Fourth", "Gift Cards"};
+        ImageIcon[] menu_items = {brewed_tea, milk_tea, fruit_tea, fresh_milk, ice_blended, creama, tea_mojito, newItem, top_order, second, third, fourth};
+        String[] categories = {"Brewed Tea", "Milk Tea", "Fruit Tea", "Fresh Milk", "Ice Blended", "Creama", "Tea Mojito", "New", "Top Order", "Second", "Third", "Fourth"};
         
         //Loads Buttons and Queries once button is selected
-        for(int i = 0; i < 15; i++)
+        for(int i = 0; i < 12; i++)
         {
             JButton button = new JButton(menu_items[i]);
             final int index = i;
@@ -191,7 +194,7 @@ public class Menu extends JFrame{
         JList<String> orderList = new JList<>(orderListModel);
         orderList.setFont(new Font("Arial", Font.PLAIN, 10));
         JScrollPane orderScrollPane = new JScrollPane(orderList);
-        orderScrollPane.setPreferredSize(new Dimension(300, 500));
+        orderScrollPane.setPreferredSize(new Dimension(400, 500));
         orderPanel.add(orderScrollPane, BorderLayout.CENTER);
 
         totalPriceLabel = new JLabel("Total: $0.00", SwingConstants.CENTER);
@@ -251,8 +254,27 @@ public class Menu extends JFrame{
         
         // Set up and execute query
         String query = "SELECT name, id, price FROM Menu WHERE category = ?";
+        if(category.equals("Top Order"))
+        {
+            query = "SELECT itemname AS name, itemid AS id, saleprice AS price, COUNT(*) AS NumberOfSales FROM Sales GROUP BY itemname, itemid, saleprice ORDER BY NumberOfSales DESC LIMIT 1";
+        }
+        if(category.equals("Second"))
+        {
+            query = "SELECT itemname AS name, itemid AS id, saleprice AS price, COUNT(*) AS NumberOfSales FROM Sales GROUP BY itemname, itemid, saleprice ORDER BY NumberOfSales DESC LIMIT 1 OFFSET 1";
+        }
+        if(category.equals("Third"))
+        {
+            query = "SELECT itemname AS name, itemid AS id, saleprice AS price, COUNT(*) AS NumberOfSales FROM Sales GROUP BY itemname, itemid, saleprice ORDER BY NumberOfSales DESC LIMIT 1 OFFSET 2";
+        }
+        if(category.equals("Fourth"))
+        {
+            query = "SELECT itemname AS name, itemid AS id, saleprice AS price, COUNT(*) AS NumberOfSales FROM Sales GROUP BY itemname, itemid, saleprice ORDER BY NumberOfSales DESC LIMIT 1 OFFSET 3";
+        }
         PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setString(1, category);
+        if(category.equals("Top Order") == false && category.equals("Second") == false && category.equals("Third") == false && category.equals("Fourth") == false)
+        {
+            pstmt.setString(1, category);
+        }
         ResultSet result = pstmt.executeQuery();
 
         JDialog popup = new JDialog(this, "Select an Item", true);
@@ -280,6 +302,7 @@ public class Menu extends JFrame{
         }
     }
 
+
     // Puts menu item into order vector given an id
     private void addItemToOrder(Integer id){
         
@@ -292,7 +315,25 @@ public class Menu extends JFrame{
 
         try {
         conn = DriverManager.getConnection(database_url, database_user, database_password);
-        
+
+        String stockQuery = "SELECT stock FROM Inventory WHERE itemid = ?";
+        PreparedStatement sstmt = conn.prepareStatement(stockQuery);
+        sstmt.setInt(1, id);
+        ResultSet stockResult = sstmt.executeQuery();
+        if (stockResult.next()) 
+        {
+            int stock = stockResult.getInt("stock");
+            if (stock <= 0) 
+            {
+                JOptionPane.showMessageDialog(null, "This item is out of stock and cannot be added to the order.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } 
+        else 
+        {
+            JOptionPane.showMessageDialog(null, "Item not found in inventory.");
+            return;
+        }
         // Set up and execute query
         String query = "SELECT name, category, price FROM Menu WHERE id = ?";
         PreparedStatement pstmt = conn.prepareStatement(query);
