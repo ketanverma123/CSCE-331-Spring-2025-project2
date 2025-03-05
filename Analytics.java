@@ -284,7 +284,13 @@ public class Analytics extends JFrame {
         }
     }
 
-    // Items used in user specified time window
+    /*
+     * Gets data from database for specified time window
+     * 
+     * @param startDateTime Beginning of time window
+     * @param endDateTime End of time window
+     * @return void
+     */
     public void loadItemUsageWithinTimeWindow(String startDateTime, String endDateTime) {
         timeWindowTableModel.setRowCount(0);
 
@@ -327,7 +333,11 @@ public class Analytics extends JFrame {
         }
     }
 
-    // hourly sales of current day
+    /*
+     * Loads sales from database for each hour of the current day
+     * 
+     * @return void
+     */
     public void loadSalesPerHourOfCurrentDay() {
         hourlySalesTableModel.setRowCount(0);
 
