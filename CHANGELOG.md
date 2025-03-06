@@ -1,5 +1,43 @@
 CHANGELOG
 
+[Release 4] - 2025-03-05
+
+ADDED
+- Analytics.html
+- GUI.html
+- Inventory.html
+- Item.html
+- LoginPanel.html
+- Menu.html
+- User.html
+- allclasses-index.html
+- allpackages-index.html
+- help-doc.html
+- index-all.html
+- index.html
+- member-search-index.js
+- module-search-index.js
+- overview-tree.html
+- package-search-index.js
+- package-summary.html
+- package-tree.html
+- seach.html
+- serialized-form.html
+- tag-search-index.js
+- type-search-index.js
+
+CHANGED
+- Ineventory.java
+- Menu.java
+- Analytics.java
+- GUI.java
+
+REMOVED
+- Gift_Card.png
+- Ice_Cream.png
+- Rewards.png
+
+
 [Release 3] - 2025-02-26
 
 ADDED
