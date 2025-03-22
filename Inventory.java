@@ -5,8 +5,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-/*
- * Class composed of functions necesary to run the Inventory panel
+/**
+ * This class contains the functions which run and create the inventory panel.
  * 
  * @author Landon Delgado
  */

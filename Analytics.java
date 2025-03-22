@@ -4,8 +4,8 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-/*
- * Class composed of functions needed to run analytics panel
+/**
+ * This class contains the functions which run and create the analytics panel.
  * 
  * @author Ketan Verma
  */

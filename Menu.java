@@ -4,10 +4,10 @@ import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
-/*  Creates the POS system/main menu
-    * @author Ayush Shah
-    *
-*/
+/**  This class contains the functions which run and create the menu panel.
+ * @author Ayush Shah
+ * 
+ */
 public class Menu extends JFrame{
     //Global variables for calculating an individuals order for the GUI
     private Vector<Item> order = new Vector<>();
