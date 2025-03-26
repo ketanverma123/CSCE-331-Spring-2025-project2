@@ -182,7 +182,7 @@ public class Analytics extends JFrame {
 
         timeWindowPanel.add(timeWindowControlPanel, BorderLayout.NORTH);
         timeWindowPanel.add(timeWindowScroll, BorderLayout.CENTER);
-        analyticsTabs.addTab("Time Window Usage", timeWindowPanel);
+        analyticsTabs.addTab("Product Usage Table", timeWindowPanel);
 
         // hourly sales panel call
         JPanel hourlySalesPanel = new JPanel(new BorderLayout());
@@ -293,43 +293,59 @@ public class Analytics extends JFrame {
      */
     public void loadItemUsageWithinTimeWindow(String startDateTime, String endDateTime) {
         timeWindowTableModel.setRowCount(0);
-
+    
         String database_name = "team_74_db";
         String database_user = "team_74";
         String database_password = "alka";
         String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
-
+    
         String sql =
-            "SELECT itemname, COUNT(*) AS total_used " +
-            "FROM Sales " +
-            "WHERE (saledate + saletime) BETWEEN '" + startDateTime + "' AND '" + endDateTime + "' " +
-            "GROUP BY itemname " +
+            // Get amount of items sold within timeframe
+            "WITH item_counts AS ( " +
+            "    SELECT itemname, COUNT(*) AS item_sold " +
+            "    FROM Sales " +
+            "    WHERE (saledate + saletime) BETWEEN '" + startDateTime + "' AND '" + endDateTime + "' " +
+            "    GROUP BY itemname " +
+            // Use the item_counts table to create an ingredient_totals table
+            "), ingredient_totals AS ( " +
+            // From each ingredient, sum the amount of ingredients used over all drinks
+            "    SELECT i.ingredient_name, SUM(ic.item_sold * i.quantity) AS total_used, i.unit " +
+            // Add what we just summed to the ingredient_totals table based on item name 
+            "    FROM item_counts ic " +
+            "    JOIN Ingredients i ON i.menu_item_name = ic.itemname " +
+            "    GROUP BY i.ingredient_name, i.unit " +
+            ") " +
+            "SELECT ingredient_name, total_used, unit " +
+            "FROM ingredient_totals " +
             "ORDER BY total_used DESC;";
-
+    
         try (Connection conn = DriverManager.getConnection(database_url, database_user, database_password);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-
+    
+            timeWindowTableModel.setColumnIdentifiers(new String[] { "Ingredient", "Total Used", "Unit" });
+    
             while (rs.next()) {
-                String itemName = rs.getString("itemname");
-                int totalUsed   = rs.getInt("total_used");
-
+                String ingredient = rs.getString("ingredient_name");
+                double totalUsed = rs.getDouble("total_used");
+                String unit = rs.getString("unit");
+    
                 timeWindowTableModel.addRow(new Object[] {
-                    itemName,
-                    totalUsed
+                    ingredient,
+                    String.format("%.2f", totalUsed),
+                    unit
                 });
             }
-
-            // Center align
+    
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
             for (int i = 0; i < timeWindowTable.getColumnCount(); i++) {
                 timeWindowTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
             }
-
+    
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error retrieving time window usage data.");
+            JOptionPane.showMessageDialog(this, "Error retrieving ingredient usage data.");
         }
     }
 
