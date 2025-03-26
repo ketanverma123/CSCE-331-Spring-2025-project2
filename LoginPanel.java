@@ -2,8 +2,8 @@ import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 
-/*
- * Class composed of functions necessary to run the login panel
+/**
+ * This class contains the functions which run and create the login panel.
  * 
  * @author Landon Delgado
  */

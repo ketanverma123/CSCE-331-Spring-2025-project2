@@ -1,5 +1,5 @@
-/*
-* Item class for products
+/**
+* This class is used to store information regarding each inventory item.
 * 
 * @author Landon Delgado
 */

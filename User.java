@@ -1,5 +1,5 @@
-/*
-* Class to define a user to distinguish cashiers and managers
+/**
+* Class to define a user to distinguish cashiers and managers.
 * 
 * @author Landon Delgado
 */

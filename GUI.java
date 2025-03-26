@@ -3,10 +3,11 @@
     import java.util.Date;
     import javax.swing.*;
 
-    /* Compiles all panels into one to construct the overall GUI
-    * 
-    * @author Landon Delgado, Ketan Verma, Ayush Shah
-    */
+    /** 
+     * This class compiles the analytics, inventory, login, and menu panels to create the overall GUI.
+     * 
+     * @author Landon Delgado, Ketan Verma, Ayush Shah
+     */
     public class GUI extends JFrame {
     public static CardLayout cardLayout;
     public static JPanel cardPanel;
